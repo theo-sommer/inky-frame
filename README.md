@@ -1,34 +1,94 @@
+<div align="center">
+
 # Inky Frame
 
-A personal DIY project that combines a RaspberryPi and an E-ink screen to create a custom electronic picture frame.  
-This project includes code to control the screen alongside a full-stack web interface to process and upload images to the **Inky Frame**
+</div>
 
-## Components
+A self-hosted smart picture frame powered by a RaspberryPi with a full stack web management system
+
+![dashboard image](./docs/assets/screenshots/dashboard.png)
+
+<div align="center">
+
+![dashboard image](https://skillicons.dev/icons?i=nodejs,react,raspberrypi,postgres,express)
+
+</div>
+
+## Overview
+
+The **Inky Frame** combines a RaspberryPi and a 7 color e-ink display to create a connected picture frame you control on a browser. Organize images, create albums and control the onscreen image instantly, all on a web dashboard hosted locally on the RaspberryPi.
+
+## Features
+
+| Features                  | Description                                          |
+| ------------------------- | ---------------------------------------------------- |
+| **Web Dashboard**         | Control the Inky Frame on a locally hosted dashboard |
+| **Random Image Rotation** | See a new image every day                            |
+| **Album Management**      | Organize fitting images into collections             |
+| **Cloud Image Storage**   | Store more images with cloudinary integration        |
+| **Hardware Monitoring**   | Monitor RaspberryPi from the dashboard               |
+
+## Tech Stack
+
+| Layer      | Technology                                              |
+| ---------- | ------------------------------------------------------- |
+| Frontend   | React 19, Vite 7, React Router 7, CSS Modules           |
+| Backend    | Node.js 18, Express 5, Prisma ORM, PostgreSQL, Multer 2 |
+| Storage    | Cloudinary                                              |
+| Hardware   | Raspberry Pi Zero 2 W, Waveshare 7.3" 7-color E-ink     |
+| Pi Scripts | Python 3, Pillow, Waveshare EPD driver                  |
+
+## Hardware Requirements
 
 - [Raspberry Pi Zero 2 W](https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/)
 - [7.3inch ACeP 7-Color E-Paper E-Ink Display Module, 800×480 Pixels, SPI Communication](https://www.waveshare.com/product/displays/e-paper/epaper-1/7.3inch-e-paper-hat-f.htm)
+- 32GB+ SD card
+- Micro USB power supply
 
-## Backend
+## Getting Started
 
-The inky pi runs an api with Node.js on the pi itself that delivers images to the frontend UI and the script to control the screen
+### Prerequisites
 
-### List of the API endpoints provided by the backend:
+- NodeJS 18+, npm
+- PostgreSQL 12+
+- Python 3.7+
 
-- **Images**
-  - **Get all images:** (GET) /images
-  - **Get a random image:** (GET) /images/random
-  - **Delete image:** (DELETE) /images/:imageId
-  - **Upload image:** (POST) /albums/:albumId/images (the image needs to be in a form with the attribute `enctype="multipart/form-data"` and the input should have the attributes `type="file" name="file"`)
-- **Albums**
-  - **Get all albums:** (GET) /albums
-  - **Get album:** (GET) /albums/:albumId
-  - **Get a random image in an albums:** (GET) /albums/:albumId/random
-  - **Create album:** (POST) /albums (the name should be in the request.body `{name: "New Album"}`)
-  - **Update album by id:** (PUT) /albums/:albumId (the name should be in the request.body `{name: "New Name"}`)
-  - **Delete album:** (DELETE) /albums/:albumId
-- **Display**
-  - **Get current pi temperature:** (GET) /display/pi/temp
-  - **Update display:** (POST) /display/image (the image id should be in the request.body `{imageId: 12}`)
-  - **Get current image:** (POST) /display/image
-  - **Update current album:** (POST) /display/album (the album id should be in the request.body `{albumId: 4}`)
-  - **Get current album:** (POST) /display/album
+### Backend
+
+```bash
+cd backend
+npm install
+npx prisma migrate deploy
+touch .env
+```
+
+**.env**
+
+```bash
+# Database
+DATABASE_URL="[link_to_postgres_database]"
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=[your_cloud_name]
+CLOUDINARY_API_KEY=[your_api_key]
+CLOUDINARY_SECRET_KEY=[your_secret_key]
+
+# Frontend link
+FRONTEND_URL=http://[pi_ip_address]:4173
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run build
+touch .env
+```
+
+**.env**
+
+```bash
+VITE_API_URL=http://[pi_ip_address]:3000
+VITE_ALLOWED_HOSTS=[pi_ip_address]
+```
